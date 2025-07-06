@@ -1,0 +1,88 @@
+==========================
+Conceptos previos sobre las Consultas a la BD
+==========================
+
+--------------------------
+Realizar una consulta
+--------------------------
+
+Para realizar cualquier acción sobre la base de datos (consulta, insertar nuevos registros, modificar los existentes o borrar), necesitamos una clase PreparedStatement. Para obtenerla, se le pide dicha clase a la conexión. 
+
+La forma de hacerlo, para una consulta, es la siguiente:
+
+// Preparamos la consulta  
+String sql = "select * from categorias";
+PreparedStatement sentencia = conexion.prepareStatement(sql);  
+ResultSet resultado = sentencia.executeQuery();
+
+🔸 La parte de prepareStatement() puede lanzar una excepción que hay que capturar.
+
+El PreparedStatement obtenido tiene un método:
+- executeQuery() → para leer datos
+- executeUpdate() → para insertar, actualizar y eliminar
+
+El parámetro que se pasa es un String con la consulta en lenguaje SQL.
+No hace falta terminarlo con punto y coma.
+
+En nuestro caso:  
+"select * from categorias" → siendo `categorias` el nombre de la tabla en la base de datos.
+
+El resultado nos lo devuelve como un **ResultSet**, que es una clase Java similar a una lista en la que están los resultados de la consulta.  
+Cada elemento es un registro de la base de datos.
+
+⚠️ ResultSet no contiene todos los datos en memoria inmediatamente.
+Va trayéndolos a medida que se recorren para evitar sobrecargar la memoria.
+
+--------------------------
+Leer los resultados
+--------------------------
+
+El ResultSet contiene los registros leídos.  
+Inicialmente, el "puntero" está justo delante del primer registro.
+
+El método `.next()`:
+- Avanza al siguiente registro
+- Devuelve `true` si hay más registros, `false` si no hay más
+
+Forma común de recorrer registros:
+
+// Recorremos el resultado, mientras haya registros para leer
+while (resultado.next()) {
+    ...
+}
+
+Una vez que el puntero apunta a un registro, podemos leer los valores con:
+
+- getInt()
+- getString()
+- getDate()
+- etc.
+
+Podemos usar:
+- Un índice (desde 1)
+- Un String con el **nombre exacto** de la columna
+
+Ejemplo:
+
+resultado.getInt(1);  
+resultado.getString("nombre_columna");  
+resultado.getDate("fecha");
+
+✅ Debemos saber qué tipo de datos hay en cada columna.  
+✅ Si nos equivocamos, ResultSet intentará hacer la conversión automáticamente.
+
+Por ejemplo, podemos usar getString() para:
+- Números → se devuelven como string
+- Fechas → se devuelven como string
+
+--------------------------
+Cerrar la conexión
+--------------------------
+
+Una vez que terminamos de usar la conexión, debemos cerrarla.
+
+Ejemplo:
+
+conexion.close();
+
+➡️ También se cierra automáticamente si el programa termina.

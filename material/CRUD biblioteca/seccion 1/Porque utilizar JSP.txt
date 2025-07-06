@@ -1,0 +1,26 @@
+==========================
+¿Por qué utilizar JSP?
+==========================
+
+JavaServer Pages (JSP) cumple la misma función que los programas implementados mediante el Common Gateway Interface (CGI), 
+pero ofrece varias ventajas significativas:
+
+--------------------------
+1. Mejor rendimiento
+--------------------------
+JSP permite incrustar elementos dinámicos directamente en páginas HTML, 
+a diferencia de CGI que requiere archivos separados para cada solicitud. 
+Esto mejora considerablemente el rendimiento del servidor.
+
+--------------------------
+2. Compilación previa
+--------------------------
+Las páginas JSP se compilan antes de ser procesadas por el servidor, 
+mientras que los scripts CGI (como Perl) necesitan cargar el intérprete y el script cada vez que se solicita.
+
+--------------------------
+3. Acceso completo a APIs Java
+--------------------------
+JSP se construye sobre la API de Servlets de Java, por lo tanto, puede acceder a poderosas APIs empresariales como:
+- JDBC (acceso a bases de datos)
+- JNDI

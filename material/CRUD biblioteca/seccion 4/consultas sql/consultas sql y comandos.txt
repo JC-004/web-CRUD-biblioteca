@@ -1,0 +1,2 @@
+INSERT INTO categorias(nombre) values ('Medicina');
+select * from categorias;

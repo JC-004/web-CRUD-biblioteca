@@ -1,0 +1,10 @@
+model\Categoria.class
+controller\EditorialControl.class
+dao\LibroDao.class
+model\Libro.class
+controller\LibroControl.class
+dao\Conexion.class
+model\Editorial.class
+controller\CategoriaControl.class
+dao\CategoriaDao.class
+dao\EditorialDao.class

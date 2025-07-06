@@ -1,0 +1,279 @@
+create database ecommerce_db;
+
+CREATE TABLE tbl_categoria(
+codigo INT AUTO_INCREMENT PRIMARY KEY,
+nombre varchar(30) unique,
+visible boolean default true,
+categoria_superior int,
+FOREIGN KEY(categoria_superior) REFERENCES tbl_categoria(codigo)
+);
+
+delimiter $$
+create procedure sp_listarCategoriaSuperior()
+BEGIN
+    SELECT codigo,nombre FROM tbl_categoria
+    where codigo = categoria_superior AND visible = true;
+END$$
+
+call sp_listarCategoriaSuperior()
+
+delimiter $$
+create procedure sp_listarSubCategoria()
+BEGIN
+    SELECT codigo,nombre FROM tbl_categoria
+    where codigo<>categoria_superior AND visible = true;
+END$$
+
+delimiter $$
+create procedure sp_contarSubCategorias(codcat int)
+BEGIN
+    SELECT count(*) as cantidad from tbl_categoria
+    where categoria_superior = codcat and codigo<>codcat;
+END$$
+call sp_contarSubCategorias(5)
+
+
+
+
+
+
+
+call sp_listarSubCategoria(5)
+select * from tbl_categoria;
+
+CREATE TABLE tbl_marca(
+codigo INT AUTO_INCREMENT PRIMARY KEY,
+nombre varchar(30) unique,
+visible boolean default true
+);
+
+CREATE TABLE tbl_revision(
+codigo INT AUTO_INCREMENT PRIMARY KEY,
+nombre varchar(30) NOT NULL,
+correo varchar(60),
+comentario varchar(200),
+estrellas INT DEFAULT 3,
+fecha DATETIME,
+webid INT,
+FOREIGN KEY(webid) REFERENCES tbl_producto(webid)
+);
+
+CREATE TABLE tbl_producto(
+webid INT AUTO_INCREMENT PRIMARY KEY,
+nombre varchar(30),
+precio decimal(10,2),
+precionuevo decimal(10,2),
+stock INT default 1,
+nuevo boolean default true,
+recomendado boolean default false,
+descripcion VARCHAR(255),
+visible boolean default true,
+CHECK (precio>precionuevo),
+codigo_marca INT,
+codigo_categoria INT,
+FOREIGN KEY(codigo_marca) REFERENCES tbl_marca(codigo),
+FOREIGN KEY(codigo_categoria) REFERENCES tbl_categoria(codigo),
+img VARCHAR(100) default 'demo.png'
+);
+
+
+
+-- Creando tabla de movimiento(un producto puede tener varios precios
+-- en diferentes divisas)
+
+create table tbl_producto_moneda(
+
+moneda char(3),
+precio decimal(10,2),
+precionuevo decimal(10,2),
+check (precionuevo<precio),
+webid int,
+foreign key(webid) references tbl_producto(webid),
+primary key(moneda,webid)
+
+);
+
+-- ----------------------------------------------
+-- Listar todo de Categoria
+drop procedure sp_listartododeCategoria
+delimiter $$
+create procedure sp_listartododeCategoria()
+begin 
+  select codigo,nombre from tbl_categoria where visible = true order by nombre;    
+end$$
+call sp_listartododeCategoria()
+-- Listar todo de Marca
+
+delimiter $$
+create procedure sp_listartododeMarca()
+begin 
+  select codigo,nombre from tbl_marca where visible = true order by nombre;    
+end$$
+
+call sp_listartododeMarca()
+
+-- ----------------------------------------------
+delimiter $$
+create procedure sp_registrarproducto(
+
+p_nombre varchar(30),
+p_precio decimal(10,2),
+p_precionuevo  decimal(10,2),
+p_stock int,
+p_nuevo boolean,
+p_recomendado boolean,
+p_descripcion text,
+p_visible boolean,
+p_codigo_marca int,
+p_codigo_categoria int,
+p_img varchar(100),
+
+
+p_moneda_usd char(3),
+p_precio_usd decimal(10,2),
+p_precionuevo_usd decimal(10,2),
+
+p_moneda_mxn char(3),
+p_precio_mxn decimal(10,2),
+p_precionuevo_mxn decimal(10,2),
+
+
+p_moneda_cop char(3),
+p_precio_cop decimal(10,2),
+p_precionuevo_cop decimal(10,2)
+
+
+)
+begin
+DECLARE v_webid INT;
+    INSERT INTO tbl_producto VALUES(null,p_nombre,p_precio,p_precionuevo,p_stock,
+p_nuevo,p_recomendado,p_descripcion,p_visible,p_codigo_marca,p_codigo_categoria,p_img );
+
+SET v_webid = (SELECT LAST_INSERT_ID() );
+
+    INSERT INTO tbl_producto_moneda VALUES(p_moneda_usd,p_precio_usd,p_precionuevo_usd,v_webid);
+    INSERT INTO tbl_producto_moneda VALUES(p_moneda_mxn,p_precio_mxn,p_precionuevo_mxn,v_webid);
+    INSERT INTO tbl_producto_moneda VALUES(p_moneda_cop,p_precio_cop,p_precionuevo_cop,v_webid);
+end$$
+
+-- crear procedimiento para producto recomendado
+delimiter$$
+create procedure sp_listarRecomendados(p_moneda char(3))
+begin
+    select p.*, m.precio  as precio2, m.precionuevo as precion2 from tbl_producto p 
+    inner join tbl_producto_moneda m on m.webid = p.webid
+    inner join tbl_marca mar on mar.codigo = p.codigo_marca
+    inner join tbl_categoria c on c.codigo = p.codigo_categoria
+    where p.visible = true and c.visible = true and mar.visible=true and m.moneda = p_moneda;
+
+end$$
+
+call sp_listarRecomendados('PEN')
+
+--eliminando el anterior proceso almacenado
+drop procedure sp_listarRecomendados
+
+delimiter$$
+create procedure sp_listarRecomendados(p_moneda char(3))
+begin
+if p_moneda<>'PEN' then
+        select p.*, m.precio  as precio2, m.precionuevo as precion2 from tbl_producto p 
+        inner join tbl_producto_moneda m on m.webid = p.webid
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and m.moneda = p_moneda;
+else 
+        select p.* from tbl_producto p     
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true;
+end if;
+end$$
+
+call sp_listarRecomendados('PEN')
+call sp_listarRecomendados('USD')
+call sp_listarRecomendados('MXN')
+call sp_listarRecomendados('COP')
+
+-- creando nuevo procedimiento almacenado(LISTAR PRODUCTOS POR CATEGORIA)
+
+delimiter$$
+create procedure sp_listarPorCategoria(p_moneda char(3), cat int )
+begin
+if p_moneda<>'PEN' then
+        select p.*, m.precio  as precio2, m.precionuevo as precion2 from tbl_producto p 
+        inner join tbl_producto_moneda m on m.webid = p.webid
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and m.moneda = p_moneda
+        and p.codigo_categoria=cat;
+else 
+        select p.* from tbl_producto p     
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and p.codigo_categoria=cat;
+end if;
+end$$
+
+
+
+
+
+
+
+
+
+
+
+
+-- creando nuevo procedimiento almacenado(LISTAR PRODUCTOS POR MARCA)
+delimiter$$
+create procedure sp_listarPorMarca(p_moneda char(3), mar int )
+begin
+if p_moneda<>'PEN' then
+        select p.*, m.precio  as precio2, m.precionuevo as precion2 from tbl_producto p 
+        inner join tbl_producto_moneda m on m.webid = p.webid
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and m.moneda = p_moneda
+        and p.codigo_marca=mar;
+else 
+        select p.* from tbl_producto p     
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and p.codigo_marca=mar;
+end if;
+end$$
+
+--creando otro procedimiento almacenado
+delimiter$$
+create procedure sp_contarProductosMarca( mar int )
+begin
+    select count(*) as cantidad from tbl_producto where codigo_marca=mar;
+end$$
+
+
+
+
+
+
+
+-- Creando PS session 7
+
+delimiter$$
+create procedure sp_consultarProducto(p_moneda char(3), p_webid int )
+begin
+if p_moneda<>'PEN' then
+        select p.*, m.precio  as precio2, m.precionuevo as precion2 from tbl_producto p 
+        inner join tbl_producto_moneda m on m.webid = p.webid
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and m.moneda = p_moneda
+        and p.webid=p_webid;
+else 
+        select p.* from tbl_producto p     
+        inner join tbl_marca mar on mar.codigo = p.codigo_marca
+        inner join tbl_categoria c on c.codigo = p.codigo_categoria
+        where p.visible=true and c.visible=true and mar.visible=true and p.webid=p_webid;
+end if;
+end$$

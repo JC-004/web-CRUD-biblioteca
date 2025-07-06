@@ -1,0 +1,61 @@
+==============================
+📦 Capa de Acceso a Datos (DAO)
+==============================
+
+Los **Objetos de Acceso a Datos (DAOs)** son un patrón de diseño perteneciente al Core J2EE y se consideran una **buena práctica de desarrollo**.
+
+✅ **Ventajas del uso de DAOs:**
+- Aíslan la lógica de acceso a datos del resto de la aplicación.
+- Permiten cambiar la tecnología de persistencia (JDBC, JDO, EJB, etc.) sin modificar otras partes del código.
+- Facilitan el mantenimiento y evolución de la aplicación.
+
+----------------------------------------
+🔗 ¿Qué es la Capa de Acceso a Datos (CAD)?
+----------------------------------------
+
+Nuestra **CAD** es un **paquete Java** que nos proporciona un acceso simplificado a los datos almacenados en la base de datos.
+
+🧠 **Objetivo**:
+- Permitir que los módulos del cliente trabajen con un mayor nivel de abstracción.
+- Devolver objetos completos con atributos, en lugar de simples registros SQL.
+
+----------------------------------------
+🛠️ Ejemplo de implementación
+----------------------------------------
+
+En lugar de usar comandos SQL directamente como:
+
+```java
+INSERT, DELETE, UPDATE
+```
+
+Podemos definir clases con métodos como:
+
+```java
+registerLibros();
+loginUsuario();
+```
+
+📌 Estos métodos internamente ejecutarán las sentencias SQL necesarias o invocarán procedimientos almacenados definidos en la base de datos.
+
+----------------------------------------
+📥 Beneficios:
+----------------------------------------
+
+- Aumenta la cohesión del código.
+- Mejora la separación de responsabilidades.
+- Simplifica la reutilización y prueba de componentes.
+
+```java
+// Ejemplo de método dentro de un DAO
+public Usuario loginUsuario(String email, String password) {
+    // Código que interactúa con la base de datos
+    // y devuelve un objeto Usuario
+}
+```
+
+----------------------------------------
+📚 Conclusión:
+----------------------------------------
+
+La implementación de una **Capa de Acceso a Datos** mediante el patrón DAO es fundamental en aplicaciones empresariales Java para lograr una arquitectura limpia, escalable y desacoplada.

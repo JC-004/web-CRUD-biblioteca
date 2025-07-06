@@ -1,0 +1,2 @@
+Tratar de registrar la información
+De acuerdo a lo aprendido hasta el momento, trate de registrar la información de los libros.

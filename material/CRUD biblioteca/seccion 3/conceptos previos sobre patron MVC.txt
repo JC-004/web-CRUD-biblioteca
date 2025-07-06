@@ -1,0 +1,42 @@
+==========================
+Modelo - Vista - Controlador (MVC)
+==========================
+
+--------------------------
+Modelo (Model)
+--------------------------
+Es una representación del esquema de la base de datos visto desde el lenguaje de programación.
+
+Funciones principales:
+- Se encarga del transporte de datos.
+- Da formato a los datos antes de enviarlos a la base de datos.
+- Notifica o carga en el controlador los nuevos datos o cambios en los registros de la base de datos (BD).
+
+--------------------------
+Vista (View)
+--------------------------
+Representa la parte visual de los datos.
+
+Características:
+- Son los elementos gráficos que ve el usuario.
+- Muestra los datos de forma entendible y adecuada.
+- Se enfoca en la presentación, no en la lógica de negocio.
+
+--------------------------
+Controlador (Controller)
+--------------------------
+Actúa como intermediario entre la vista y el modelo.
+
+Responsabilidades:
+- Recibe las acciones del usuario (clics, formularios, etc.).
+- Solicita los datos actualizados al modelo.
+- Envía los datos a la vista para su presentación.
+
+==========================
+Resumen del patrón MVC:
+==========================
+Usuario <--> Vista <--> Controlador <--> Modelo <--> Base de datos
+
+- Modelo: gestiona datos y lógica.
+- Vista: muestra información.
+- Controlador: coordina la interacción entre vista y modelo.

@@ -1,0 +1,12 @@
+// Completar el código del Servlet EditorialControl
+// Cree el código necesario para que el Servlet EditorialControl.java 
+// pueda registrar las editoriales a partir de los datos enviados desde el formulario.
+
+@Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    //que va aquí???
+}
+
+// luego de intentar revise el video que sigue a esta clase 
+// y detalle cómo se realizó dicho proceso.

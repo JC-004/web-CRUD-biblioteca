@@ -1,0 +1,117 @@
+==========================
+Conceptos Básicos y Sintaxis de JSP
+==========================
+
+Estos son conceptos teóricos esenciales para el desarrollo con JavaServer Pages (JSP). A medida que avances en la práctica, irás comprendiendo con mayor profundidad su funcionalidad.
+
+--------------------------
+1. Scriptlet
+--------------------------
+
+Un scriptlet puede contener cualquier número de instrucciones Java, declaraciones de variables o métodos, o expresiones válidas del lenguaje Java.
+
+Sintaxis:
+<% código Java %>
+
+Versión XML:
+<jsp:scriptlet>
+   código Java
+</jsp:scriptlet>
+
+Ejemplo:
+<html>
+<head><title>Hello World</title></head>
+<body>
+Hello World!<br/>
+<%
+out.println("Your IP address is " + request.getRemoteAddr());
+%>
+</body>
+</html>
+
+--------------------------
+2. Declaraciones JSP
+--------------------------
+
+Una declaración JSP se utiliza para definir variables o métodos que pueden ser utilizados más adelante en la misma página JSP.
+
+Sintaxis:
+<%! declaración; [ declaración; ]+ ... %>
+
+Versión XML:
+<jsp:declaration>
+   código Java
+</jsp:declaration>
+
+Ejemplo:
+<%! int i = 0; %>
+<%! int a, b, c; %>
+<%! Circle a = new Circle(2.0); %>
+
+--------------------------
+3. Expresiones JSP
+--------------------------
+
+Una expresión JSP contiene una expresión Java que se evalúa, se convierte en cadena y se inserta directamente en la salida HTML generada.
+
+Importante: No se debe terminar la expresión con punto y coma.
+
+Sintaxis:
+<%= expresión %>
+
+Versión XML:
+<jsp:expression>
+   expresión
+</jsp:expression>
+
+Ejemplo:
+<html> 
+<head><title>A Comment Test</title></head> 
+<body>
+<p>
+   Today's date: <%= (new java.util.Date()).toLocaleString() %>
+</p>
+</body> 
+</html>
+
+Salida esperada:
+Today's date: 11-Sep-2010 21:24:25
+
+--------------------------
+4. Comentarios JSP
+--------------------------
+
+Los comentarios JSP permiten ocultar secciones del código JSP. No serán visibles en el HTML generado.
+
+Sintaxis:
+<%-- Esto es un comentario JSP --%>
+
+Ejemplo:
+<html> 
+<head><title>A Comment Test</title></head> 
+<body> 
+<h2>A Test of Comments</h2> 
+<%-- This comment will not be visible in the page source --%> 
+</body> 
+</html>
+
+Salida esperada:
+A Test of Comments
+
+--------------------------
+5. Objetos Implícitos JSP
+--------------------------
+
+JSP proporciona nueve objetos implícitos accesibles automáticamente:
+
+request      -> Objeto HttpServletRequest (solicitud del cliente).
+response     -> Objeto HttpServletResponse (respuesta al cliente).
+out          -> Objeto JspWriter (salida al cliente).
+session      -> Objeto HttpSession (sesión del usuario).
+application  -> Objeto ServletContext (contexto de la aplicación).
+config       -> Objeto ServletConfig (configuración de la página).
+pageContext  -> Objeto con información específica del servidor.
+page         -> Referencia al objeto actual (sinónimo de 'this').
+exception    -> Objeto Exception con información de errores.
+
+==========================

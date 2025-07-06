@@ -1,0 +1,51 @@
+==========================
+Conceptos previos sobre la Conexión y consultas a la BD
+==========================
+
+En el video siguiente crearemos la clase de conexión, pero antes de esto debemos entender algunos conceptos clave:
+
+En nuestra aplicación web, todos los import que necesitamos para manejar la base de datos están en el paquete java.sql.*. 
+Ya que casi todos los métodos relativos a base de datos pueden lanzar la excepción SQLException, por tal motivo estamos obligados a usar un try-catch.
+
+Desde NetBeans IDE debemos incluir el driver MySQL (mysql-connector-java-3.1.7-bin.jar) o la versión más moderna y compatible con la versión de nuestro servidor de MySQL.
+
+--------------------------
+Inicializar y registrar el Driver
+--------------------------
+
+Lo primero que tenemos que hacer es asegurarnos que el Driver se inicializa y se registra, para ello usamos el código: 
+
+try {
+   Class.forName("com.mysql.jdbc.Driver");
+} catch (Exception e) {
+   e.printStackTrace();
+}
+
+--------------------------
+Establecer la conexión con la base de datos
+--------------------------
+
+Debemos tener el servidor de MySQL encendido.
+
+El servidor de MySQL abre por defecto el puerto 3306 para aceptar conexiones de posibles clientes, de programas que quieran conectarse y acceder a la base de datos.
+Si nuestra aplicación web quiere hacer consultas a las tablas de base de datos que hemos creado, deberá conectarse a este servidor.
+
+Para establecer la conexión, la clase DriverManager tiene métodos getConnection(). Usaremos uno de ellos:
+
+// Establecemos la conexión con la base de datos.
+Connection conexion = DriverManager.getConnection(
+   "jdbc:mysql://localhost/biblioteca", "root", "la_clave");
+
+--------------------------
+Parámetros del método getConnection()
+--------------------------
+
+1. "jdbc:mysql" -> porque estamos utilizando un driver JDBC para MySQL.
+2. "localhost"  -> porque el servidor de base de datos está en el mismo ordenador.
+   (Aquí puede ponerse una IP o un nombre de máquina que esté en la red).
+3. "biblioteca" -> es el nombre de la base de datos que he creado dentro de MySQL.
+4. "root", "la_clave" -> usuario y contraseña del servidor MySQL.
+
+Al instalar MySQL se crea el usuario root y se pide la password para él.
+
+==========================

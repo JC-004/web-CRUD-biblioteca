@@ -1,0 +1,15 @@
+--en el mismo video se menciona
+update libro set
+titulo = ?,
+descripcion = ?,
+nombre_autor=?,
+publicacion = ?,
+fecha_registro=?,
+codigo_categoria=?,
+nit_editorial=?
+where isbn = ?
+
+select * from libros;
+
+
+delete from libro where isbn=?

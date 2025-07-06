@@ -1,0 +1,76 @@
+-- sistema de gestion libros de biblioteca
+
+create database biblioteca;
+
+create table categorias(
+    
+    codigo int auto_increment primary key,
+    nombre varchar(50) unique    
+)
+
+
+INSERT INTO categorias(nombre) values ('Medicina');
+select * from categorias;
+
+
+create table editoriales(
+    
+    nit varchar(20) primary key,
+    nombre varchar(100) unique,
+    
+    telefono varchar(15),
+    direccion varchar(100) ,
+    email varchar(100),
+    sitioweb varchar(100)
+)
+
+-- anadir esto de la seccion 5
+INSERT INTO editoriales(nit,nombre,telefono,direccion,email,sitioweb) 
+values ('1-222222','Norma S.A.','19839138','Villa el Salvador','abc@gmail.com','www.abc.com');
+
+select * from editoriales;
+
+
+
+create table libros(
+    
+    isbn varchar(20) primary key,
+    titulo varchar(100) not null,
+    
+    descripcion varchar(255),
+    nombre_autor varchar(100),
+    publicacion date,
+    fecha_registro datetime,
+    
+    codigo_categoria int ,
+    nit_editorial varchar(20),
+
+    foreign key(codigo_categoria) references categorias(codigo),
+    foreign key(nit_editorial) references editoriales(nit)
+    
+)
+
+
+
+--nueva consulta de hoy
+(select now())
+
+INSERT INTO libros
+values ('isbnejemplo','CRUD JSP','Hola descripcion','Jorge Cardenas','2025-03-20',(select now()),12,'1-222222');
+
+
+--en el mismo video se menciona
+update libro set
+titulo = ?,
+descripcion = ?,
+nombre_autor=?,
+publicacion = ?,
+fecha_registro=?,
+codigo_categoria=?,
+nit_editorial=?
+where isbn = ?
+
+select * from libros;
+
+
+delete from libro where isbn=?

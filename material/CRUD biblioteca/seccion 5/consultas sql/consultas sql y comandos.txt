@@ -1,0 +1,5 @@
+-- anadir esto de la seccion 5
+INSERT INTO editoriales(nit,nombre,telefono,direccion,email,sitioweb) 
+values ('1-222222','Norma S.A.','19839138','Villa el Salvador','abc@gmail.com','www.abc.com');
+
+select * from editoriales;

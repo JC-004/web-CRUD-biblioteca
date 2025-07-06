@@ -1,0 +1,47 @@
+==========================
+Conceptos previos sobre los modelos
+==========================
+
+--------------------------
+Las propiedades
+--------------------------
+
+Las propiedades combinan aspectos de los campos y los métodos.
+
+Para el usuario de un objeto, una propiedad parece un campo; el acceso a la propiedad necesita la misma sintaxis.
+
+Para el implementador de una clase, una propiedad es uno o dos bloques de código que representa un descriptor de acceso get o un descriptor de acceso set.
+
+- El bloque de código del descriptor de acceso **get** se ejecuta cuando se **lee** la propiedad.
+- El bloque de código del descriptor de acceso **set** se ejecuta cuando se **asigna** un nuevo valor a la propiedad.
+
+Tipos de propiedades:
+- Una propiedad sin un descriptor de acceso set se considera **de solo lectura**.
+- Una propiedad sin un descriptor de acceso get se considera **de solo escritura**.
+- Una propiedad con ambos descriptores de acceso es **de lectura y escritura**.
+
+--------------------------
+Usos comunes de las propiedades
+--------------------------
+
+✅ Pueden **validar datos** antes de permitir un cambio.  
+✅ Pueden **exponer datos** que en realidad se recuperan de otro origen, como una **base de datos**.  
+✅ Pueden **realizar acciones** cuando los datos se cambian, como:
+   - Generar un evento.
+   - Cambiar el valor de otros campos.
+
+--------------------------
+Declaración de propiedades
+--------------------------
+
+Las propiedades se declaran en el bloque de clase, especificando:
+
+1. Nivel de acceso del campo.
+2. Tipo de la propiedad.
+3. Nombre de la propiedad.
+4. Un bloque de código que declara:
+   - Un descriptor de acceso get.
+   - O un descriptor de acceso set.
+   - O ambos.
+
+==========================
